@@ -6,7 +6,7 @@ import LinkedInSignIn from './LinkedInSignIn';
 const App = (props) => {
     return (
         <>
-        <GoogleSignIn />
+        <GoogleSignIn clientId="230467277870-ssce2shtbq5v9mrhr3b0sumru0oh4vfl.apps.googleusercontent.com"/>
         <FacebookSignIn />
         <LinkedInSignIn />
         </>
