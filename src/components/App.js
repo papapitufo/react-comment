@@ -7,7 +7,7 @@ const App = (props) => {
     return (
         <>
         <GoogleSignIn clientId="230467277870-ssce2shtbq5v9mrhr3b0sumru0oh4vfl.apps.googleusercontent.com"/>
-        <FacebookSignIn />
+        <FacebookSignIn appId="1190250085159991"/>
         <LinkedInSignIn />
         </>
     )

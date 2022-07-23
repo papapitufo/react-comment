@@ -20,7 +20,7 @@ const GoogleSignIn = (props) => {
       script.onload = init;
       document.querySelector('body').appendChild(script);
     } catch (exception) {
-      onErrorLogin && onErrorLogin(exception);
+      onErrorLogin?.(exception);
     }
 
     return () => {
@@ -32,7 +32,7 @@ const GoogleSignIn = (props) => {
   const handleCredentialResponse = async (response) => {
     const [header, payload, signature] = response.credential.split(".");
     //We are not securely parsing this token, we need to also verify it
-    onSuccessLogin && onSuccessLogin(JSON.parse(window.atob(payload)));
+    onSuccessLogin?.(JSON.parse(window.atob(payload)));
   }
 
   return (
