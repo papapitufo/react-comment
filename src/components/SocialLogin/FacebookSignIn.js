@@ -31,15 +31,18 @@ const FacebookSignIn = (props) => {
     }
   }, [])
   const handleFacebookLogin = (response) => {
-    if(response.status == "unknown") {
+    const { status } = response;
+    if(status == "unknown") {
       console.log("error", response);
       onErrorLogin?.(response);
-    } else {
-      console.log(response);
+    } else if(status == "connected"){
+      console.log("connected", response);
       const { userID } = response.authResponse;
       FB.api(`/${userID}/?fields=id,name,email,picture`, 'GET', {}, (result) => {
         onSuccessLogin?.(result);
       })
+    } else {
+      console.log("else", response);
     }
   }
   const onFacebookLoginClick = () => {
