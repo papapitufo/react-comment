@@ -1,8 +1,9 @@
 import React, { useEffect } from 'react';
 
 const GoogleSignIn = (props) => {
-  const { clientId, customClass, onSuccessLogin, onErrorLogin } = props;
+  const { clientId, customClass="", onSuccessLogin, onErrorLogin, icon } = props;
   useEffect(() => {
+    if(!clientId) throw new Error('Google ClientId needed');
     const init = () => {
       google.accounts.id.initialize({
         client_id: clientId,
@@ -10,7 +11,7 @@ const GoogleSignIn = (props) => {
       });
       google.accounts.id.renderButton(
         document.getElementById("googleLoginElement"),
-        { theme: "outline", size: "small" }
+        { theme: "filled_black", size: "medium", type: "icon" }
       );
     }
     try {
@@ -24,7 +25,6 @@ const GoogleSignIn = (props) => {
     }
 
     return () => {
-      google?.accounts.id.cancel()
       document.getElementById("GoogleGsiClientScript")?.remove()
     }
   }, []);
@@ -36,7 +36,7 @@ const GoogleSignIn = (props) => {
   }
 
   return (
-    <div id="googleLoginElement" className={customClass}></div>
+    <span id="googleLoginElement" className={customClass} style={{float: "left"}}></span>
   )
 }
 export default GoogleSignIn;

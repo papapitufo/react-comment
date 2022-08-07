@@ -1,12 +1,22 @@
 import React from 'react';
-import GoogleSignIn from './socialLogin/GoogleSignIn';
-import FacebookSignIn from './SocialLogin/FacebookSignIn';
+import ReactComment from './ReactComment';
 
-const App = (props) => {
+const App = () => {
     return (
         <>
-        <GoogleSignIn clientId="230467277870-ssce2shtbq5v9mrhr3b0sumru0oh4vfl.apps.googleusercontent.com"/>
-        <FacebookSignIn appId="1190250085159991"/>
+          <ReactComment 
+            configuration={
+                {
+                    apiUrl: null,//"https://comments.free.beeceptor.com",
+                    placeholder: "",
+                    areCommentsExpanded: true,
+                    showCount: false,
+                    showEditorButton: false,
+                    editorRows: undefined,
+                    enableRichText: false
+                }
+            }
+          />
         </>
     )
 }

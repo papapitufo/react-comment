@@ -1,0 +1,9 @@
+.comment-paragraph {
+    margin-block-start: 0.1em;
+    margin-block-end: 0.1em;
+    outline: none;
+    line-height: 1.3em;
+}
+.comment-editor-submit-button {
+    cursor: pointer;
+}

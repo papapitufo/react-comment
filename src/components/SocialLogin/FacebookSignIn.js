@@ -1,25 +1,32 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+import FacebookIcon from '@mui/icons-material/Facebook';
 const style = {
   button: {
     cursor: "pointer",
-    height: "20px",
-    border: "1px solid lightgray",
-    margin: "0.1em 0em 0.1em 0em",
-    borderRadius: "3px",
-    padding: "0.1em 0.4em 0.1em 0.4em",
-    width: "fit-content"
+    height: "28px",
+    border: "2px solid black",
+    borderRadius: "5px",
+    width: "30px",
+    marginLeft: "5px",
+    cursor: "pointer"
   }
 }
 const FacebookSignIn = (props) => {
-  const { onSuccessLogin, onErrorLogin, appId, customClass } = props;
+  const [loginStatus, setLoginStatus] = useState(null);
+  const { onSuccessLogin, onErrorLogin, appId, customClass="" } = props;
   useEffect(() => {
     const init = () => {
+      if(!appId) throw new Error("appId attribute missing");
       FB.init({
         appId,
         cookie: true,
         xfbml: true,
         version: 'v14.0'
       });
+      FB.getLoginStatus((response) => {
+        console.log('response loign status', response);
+        setLoginStatus(response);
+      })
     }
     let fbScript = document.getElementById('facebook-jssdk');
     if (!fbScript) {
@@ -29,14 +36,12 @@ const FacebookSignIn = (props) => {
       fbScript.onload = init;
       document.querySelector('body').appendChild(fbScript);
     }
-  }, [])
+  }, []);
   const handleFacebookLogin = (response) => {
     const { status } = response;
     if(status == "unknown") {
-      console.log("error", response);
       onErrorLogin?.(response);
     } else if(status == "connected"){
-      console.log("connected", response);
       const { userID } = response.authResponse;
       FB.api(`/${userID}/?fields=id,name,email,picture`, 'GET', {}, (result) => {
         onSuccessLogin?.(result);
@@ -49,7 +54,7 @@ const FacebookSignIn = (props) => {
     FB.login(handleFacebookLogin, {scope: 'public_profile,email'});
   }
   return (
-    <div className={`${customClass || ''}`} style={style.button} onClick={onFacebookLoginClick}>facebook login</div>
+      <FacebookIcon className={customClass} style={style.button} onClick={onFacebookLoginClick}/>
   )
 }
 export default FacebookSignIn;
