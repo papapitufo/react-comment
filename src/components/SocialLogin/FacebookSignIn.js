@@ -11,31 +11,54 @@ const style = {
     cursor: "pointer"
   }
 }
+
+const createLoadFBScript = () => {
+  return new Promise((resolve, reject) => {
+    const fbScript = document.createElement('script');
+    fbScript.id = "facebook-jssdk";
+    fbScript.src = "https://connect.facebook.net/en_US/sdk.js"
+    fbScript.onload = () => {
+      resolve(true);
+    };
+    try {
+      document.querySelector('body').appendChild(fbScript);
+    } catch(e) {
+      reject(e);
+    }
+  });
+}
+
+let sdkIsReadyPromise;
+
+const getFBSDK = async () => {
+  if (!sdkIsReadyPromise) {
+    // ok there is no script, let's create it and await it
+    sdkIsReadyPromise = createLoadFBScript();
+  }
+  await sdkIsReadyPromise;
+  return window.FB;
+}
+
 const FacebookSignIn = (props) => {
   const [loginStatus, setLoginStatus] = useState(null);
   const { onSuccessLogin, onErrorLogin, appId, customClass="" } = props;
   useEffect(() => {
-    const init = () => {
-      if(!appId) throw new Error("appId attribute missing");
-      FB.init({
+    async function init() {
+      // get facebook sdk
+      const sdk = await getFBSDK();
+      sdk.init({
         appId,
         cookie: true,
         xfbml: true,
         version: 'v14.0'
       });
-      FB.getLoginStatus((response) => {
+      sdk.getLoginStatus((response) => {
         console.log('response loign status', response);
-        setLoginStatus(response);
+        setLoginStatus(response.status);
       })
     }
-    let fbScript = document.getElementById('facebook-jssdk');
-    if (!fbScript) {
-      fbScript = document.createElement('script');
-      fbScript.id = "facebook-jssdk";
-      fbScript.src = "https://connect.facebook.net/en_US/sdk.js"
-      fbScript.onload = init;
-      document.querySelector('body').appendChild(fbScript);
-    }
+    init();
+    
   }, []);
   const handleFacebookLogin = (response) => {
     const { status } = response;
@@ -53,8 +76,8 @@ const FacebookSignIn = (props) => {
   const onFacebookLoginClick = () => {
     FB.login(handleFacebookLogin, {scope: 'public_profile,email'});
   }
-  return (
-      <FacebookIcon className={customClass} style={style.button} onClick={onFacebookLoginClick}/>
-  )
+
+  console.log(loginStatus);
+  return (<FacebookIcon className={customClass} style={style.button} onClick={onFacebookLoginClick}/>)
 }
 export default FacebookSignIn;
