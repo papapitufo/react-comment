@@ -1,16 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import FacebookIcon from '@mui/icons-material/Facebook';
-const style = {
-  button: {
-    cursor: "pointer",
-    height: "28px",
-    border: "2px solid black",
-    borderRadius: "5px",
-    width: "30px",
-    marginLeft: "5px",
-    cursor: "pointer"
-  }
-}
+import FacebookOutlinedIcon from '@mui/icons-material/FacebookOutlined';
+const style = {}
 
 const createLoadFBScript = () => {
   return new Promise((resolve, reject) => {
@@ -41,43 +31,52 @@ const getFBSDK = async () => {
 
 const FacebookSignIn = (props) => {
   const [loginStatus, setLoginStatus] = useState(null);
+  const [userData, setUserData] = useState(null);
   const { onSuccessLogin, onErrorLogin, appId, customClass="" } = props;
   useEffect(() => {
     async function init() {
       // get facebook sdk
       const sdk = await getFBSDK();
-      sdk.init({
+      sdk.init({  
         appId,
         cookie: true,
         xfbml: true,
         version: 'v14.0'
       });
       sdk.getLoginStatus((response) => {
-        console.log('response loign status', response);
-        setLoginStatus(response.status);
+        setLoginStatus(response);
       })
     }
     init();
     
   }, []);
+  const fetchUserInfo = (userID) => {
+    FB.api(`/${userID}/?fields=id,name,email,picture`, 'GET', {}, (result) => {
+      result["platform"] = "facebook";
+      onSuccessLogin?.(result);
+      setUserData(result);
+    })
+  } 
   const handleFacebookLogin = (response) => {
     const { status } = response;
     if(status == "unknown") {
       onErrorLogin?.(response);
     } else if(status == "connected"){
       const { userID } = response.authResponse;
-      FB.api(`/${userID}/?fields=id,name,email,picture`, 'GET', {}, (result) => {
-        onSuccessLogin?.(result);
-      })
+      fetchUserInfo(userID);
     } else {
       console.log("else", response);
     }
   }
   const onFacebookLoginClick = () => {
+    if(userData) onSuccessLogin(userData);
+    const { status, authResponse} = loginStatus;
+    if(status == 'connected') {
+      fetchUserInfo(authResponse.userID);
+      return;
+    }
     FB.login(handleFacebookLogin, {scope: 'public_profile,email'});
   }
-
-  console.log(loginStatus);
-  return (<FacebookIcon className={customClass} style={style.button} onClick={onFacebookLoginClick}/>)
+  return (<span className={`comment-social-icon ${customClass}`}><FacebookOutlinedIcon style={style.button} onClick={onFacebookLoginClick}/></span>)
 }
 export default FacebookSignIn;

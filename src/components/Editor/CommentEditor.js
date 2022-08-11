@@ -7,8 +7,8 @@ import {RichTextPlugin} from '@lexical/react/LexicalRichTextPlugin';
 import {ContentEditable} from '@lexical/react/LexicalContentEditable';
 import {HistoryPlugin} from '@lexical/react/LexicalHistoryPlugin';
 import {useLexicalComposerContext} from '@lexical/react/LexicalComposerContext';
-import GoogleSignIn from '../socialLogin/GoogleSignIn';
-import FacebookSignIn from '../SocialLogin/FacebookSignIn';
+import DialogActions from '@mui/material/DialogActions';
+import Button from '@mui/material/Button';
 import "./CommentEditorStyle.css";
 
 // Catch any errors that occur during Lexical updates and log them
@@ -23,7 +23,7 @@ const defaultTheme = {
 }
 
 function CommentEditor(props) {
-  const { rows = 2, containerStyle, customTheme, placeholder, onSubmitComment } = props;
+  const { rows = 2, containerStyle, customTheme, placeholder, onSubmitComment, onCancelComment } = props;
   const containerRows = `${rows * 23}px`;
   const styles = {
     contentEditable: {
@@ -57,21 +57,25 @@ function CommentEditor(props) {
 
   function ButtonActionsPlugin() {
     const [editor] = useLexicalComposerContext();
-    const onSubmitClicked = () => {
-      const state = editor.getEditorState();
-      state.read(() => {
-        const root = $getRoot();
-        const text = root.getTextContent();
-        if(text) {
-          props.onSubmitComment(text);
-        }
-      })
+    const actionClicked = (isSubmit) => {
+      if(isSubmit) {
+        const state = editor.getEditorState();
+        state.read(() => {
+          const root = $getRoot();
+          const text = root.getTextContent();
+          if(text) {
+            onSubmitComment(text);
+          }
+        })
+      } else {
+        onCancelComment();
+      }
     }
     return (
-      <div>
-        <GoogleSignIn clientId="230467277870-ssce2shtbq5v9mrhr3b0sumru0oh4vfl.apps.googleusercontent.com"/>
-        <FacebookSignIn appId="1190250085159991"/>
-      </div>
+      <DialogActions>
+        <Button onClick={actionClicked.bind(null, false)}>Cancel</Button>
+        <Button onClick={actionClicked.bind(null, true)}>Done</Button>
+      </DialogActions>
     )
   }
 

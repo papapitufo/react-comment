@@ -1,9 +1,12 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+import GoogleIcon from '@mui/icons-material/Google';
 
 const GoogleSignIn = (props) => {
-  const { clientId, customClass="", onSuccessLogin, onErrorLogin, icon } = props;
+  const { clientId, customClass="", onSuccessLogin, onErrorLogin, icon, userData } = props;
   useEffect(() => {
+    console.log("running", userData);
     if(!clientId) throw new Error('Google ClientId needed');
+    if(!userData) {
     const init = () => {
       google.accounts.id.initialize({
         client_id: clientId,
@@ -11,7 +14,7 @@ const GoogleSignIn = (props) => {
       });
       google.accounts.id.renderButton(
         document.getElementById("googleLoginElement"),
-        { theme: "filled_black", size: "medium", type: "icon" }
+        { type: "icon", size: "medium" }
       );
     }
     try {
@@ -23,20 +26,31 @@ const GoogleSignIn = (props) => {
     } catch (exception) {
       onErrorLogin?.(exception);
     }
+  }
 
     return () => {
       document.getElementById("GoogleGsiClientScript")?.remove()
     }
-  }, []);
+  }, [userData]);
 
   const handleCredentialResponse = async (response) => {
     const [header, payload, signature] = response.credential.split(".");
     //We are not securely parsing this token, we need to also verify it
-    onSuccessLogin?.(JSON.parse(window.atob(payload)));
+    const data = JSON.parse(window.atob(payload));
+    data["platform"] = "google";
+    onSuccessLogin?.(data);
+  }
+  const dynamicButtonRender = () => {
+    if(userData) {
+      return (
+          <GoogleIcon className={`comment-social-icon ${customClass}`} onClick={onSuccessLogin.bind(null, userData)}/>
+        )
+    }
+    return <span id="googleLoginElement" className={customClass}></span>
   }
 
   return (
-    <span id="googleLoginElement" className={customClass} style={{float: "left"}}></span>
+    dynamicButtonRender()
   )
 }
 export default GoogleSignIn;

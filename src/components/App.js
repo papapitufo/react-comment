@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactComment from './ReactComment';
+import '../style.css';
 
 const App = () => {
     return (
@@ -10,10 +11,11 @@ const App = () => {
                     apiUrl: null,//"https://comments.free.beeceptor.com",
                     placeholder: "",
                     areCommentsExpanded: true,
-                    showCount: false,
+                    showCount: true,
                     showEditorButton: false,
                     editorRows: undefined,
-                    enableRichText: false
+                    enableRichText: false,
+                    social: []
                 }
             }
           />

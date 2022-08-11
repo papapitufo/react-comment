@@ -1,16 +1,40 @@
 import React, { useEffect, useState } from 'react';
-import CommentEditor from './Editor/CommentEditor';
 import EditorDialog from './Editor/EditorDialog';
+import GoogleSignIn from './socialLogin/GoogleSignIn';
+import FacebookSignIn from './SocialLogin/FacebookSignIn';
 import { Fetcher } from '../DataProvider/Fetcher';
 
 let _api = null;
+let _userData = null;
 const ReactComment = (props) => {
   const [comments, setComments] = useState([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [showEditor, setShowEditor] = useState(!props.configuration.showEditorButton);
-  const { showCount, showEditorButton, placeholder, editorRows } = props.configuration;
+  const { showCount, editorRows, placeholder } = props.configuration;
   function fetchComments() {
     return Fetcher.get(_api);
+  }
+  function CommentsCount() {
+    return showCount && <div className="react-comments-count">{`${comments.length} comments`}</div>
+  }
+  function successLogin(userData) {
+    _userData = userData
+    setIsDialogOpen(true);
+  }
+  function WriteComment() {
+    return (
+      <div className="comment-social-container">
+      <span>write a comment with</span>
+      <GoogleSignIn 
+        clientId="230467277870-ssce2shtbq5v9mrhr3b0sumru0oh4vfl.apps.googleusercontent.com"
+        userData={_userData}
+        onSuccessLogin={successLogin}
+      />
+      <FacebookSignIn 
+        appId="1190250085159991"
+        onSuccessLogin={successLogin}
+      />
+      </div>
+    )
   }
   useEffect(() => {
     const { configuration, items = [] } = props;
@@ -25,33 +49,22 @@ const ReactComment = (props) => {
       setComments(items);
     }
   }, []);
-  const submitComment = (text) => {
-    console.log("plaintext comment", text);
-    setIsDialogOpen(true);
+  const dialogDoneclicked = (data) => {
+    console.log(data);
+    setIsDialogOpen(false)
   }
-  console.log("comments", comments);
   return (
     <>
-      {
-        showCount && (
-        <div className="react-comments-count">{`${comments.length} Comments`}</div>
-        )
-      }
-      {
-      showEditorButton &&
-      <input 
-        className="react-comments-write-comment" 
-        type="button" 
-        value="write comment" 
-        onClick={setShowEditor.bind(null, !showEditor)} 
+      <CommentsCount />
+      <WriteComment />
+      <EditorDialog 
+        open={isDialogOpen} 
+        rows={editorRows} 
+        placeholder={placeholder} 
+        onCancelComment={() => { setIsDialogOpen(false) }}
+        onSubmitComment={dialogDoneclicked}
+        userData={_userData}
       />
-      }
-      {
-        showEditor && (<>
-          <CommentEditor placeholder={placeholder} rows={editorRows} onSubmitComment={submitComment}/>
-        </>)
-      }
-      <EditorDialog open={isDialogOpen}/>
     </>
   )
 }

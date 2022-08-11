@@ -1,0 +1,28 @@
+/* Global styles */
+.comment-social-icon {
+    cursor: pointer;
+    padding: 1.7px;
+    border: 1px solid lightblue;
+    border-radius: 4px;
+    color: darkblue;
+}
+.comment-social-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+.comment-social-container span {
+    margin: 2px;
+}
+.editor-dialog-title {
+    display: flex;
+}
+.editor-dialog-title img {
+    width: 30px;
+    border-radius: 20px;
+}
+.editor-dialog-title span {
+    text-transform: capitalize;
+    font-size: 0.9em;
+    margin-left: 5px;
+}
