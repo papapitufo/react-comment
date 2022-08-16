@@ -12,14 +12,19 @@ export default function EditorDialog(props) {
   return (
     <div>
       <Dialog open={open} fullWidth={true} maxWidth="sm">
-        <DialogTitle>
+        <DialogTitle style={{paddingBottom: "6px"}}>
           <div className="editor-dialog-title">
             <img referrerPolicy="no-referrer" src={picUrl} />
             <span>{userData?.name}</span>
           </div>
         </DialogTitle>
         <DialogContent>
-          <CommentEditor placeholder={placeholder} rows={rows} onSubmitComment={onSubmitComment} onCancelComment={onCancelComment}/>
+          <CommentEditor 
+            placeholder={placeholder} 
+            rows={rows} 
+            onSubmitComment={onSubmitComment} 
+            onCancelComment={onCancelComment}
+          />
         </DialogContent>
       </Dialog>
     </div>

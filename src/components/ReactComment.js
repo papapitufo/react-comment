@@ -1,23 +1,23 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import EditorDialog from './Editor/EditorDialog';
+import CommentList from './Comment/CommentList';
 import GoogleSignIn from './socialLogin/GoogleSignIn';
 import FacebookSignIn from './SocialLogin/FacebookSignIn';
 import { Fetcher } from '../DataProvider/Fetcher';
 
-let _api = null;
-let _userData = null;
 const ReactComment = (props) => {
   const [comments, setComments] = useState([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const { showCount, editorRows, placeholder } = props.configuration;
+  const _userData = useRef(null);
+  const { showCount, editorRows, placeholder, apiUrl } = props.configuration;
   function fetchComments() {
-    return Fetcher.get(_api);
+    return Fetcher.get(apiUrl);
   }
   function CommentsCount() {
     return showCount && <div className="react-comments-count">{`${comments.length} comments`}</div>
   }
   function successLogin(userData) {
-    _userData = userData
+    _userData.current = userData;
     setIsDialogOpen(true);
   }
   function WriteComment() {
@@ -26,7 +26,6 @@ const ReactComment = (props) => {
       <span>write a comment with</span>
       <GoogleSignIn 
         clientId="230467277870-ssce2shtbq5v9mrhr3b0sumru0oh4vfl.apps.googleusercontent.com"
-        userData={_userData}
         onSuccessLogin={successLogin}
       />
       <FacebookSignIn 
@@ -38,8 +37,8 @@ const ReactComment = (props) => {
   }
   useEffect(() => {
     const { configuration, items = [] } = props;
-    _api = configuration?.apiUrl;
-    if (_api) {
+    const api = configuration?.apiUrl;
+    if (api) {
       fetchComments().then(
         (result) => {
           setComments(result);
@@ -50,8 +49,44 @@ const ReactComment = (props) => {
     }
   }, []);
   const dialogDoneclicked = (data) => {
-    console.log(data);
-    setIsDialogOpen(false)
+    if(data) {
+      const { beforeAddComment, commentTransformer } = props;
+      setIsDialogOpen(false);
+      let beforeInsertData = data;
+      if(beforeAddComment) {
+        beforeInsertData = beforeAddComment(beforeInsertData);
+      }
+      if(commentTransformer) {
+        beforeInsertData = commentTransformer(beforeInsertData);
+      }
+      const current = _userData.current;
+      const payload = {
+        comment: beforeInsertData,
+        name: current.name,
+        picture: current.picture,
+        email: current.email
+      }
+      console.log(payload);
+      if(apiUrl) {
+        Fetcher.post(`${apiUrl}/comment`, payload).then(
+          () => {
+            fetchComments().then(
+              (result) => {
+                setComments(result);
+              }
+            )
+          }
+        ).catch(
+          (exception) => {
+            console.error(exception);
+          }
+        )
+        
+      } else {
+        const {email, ...other} = payload;
+        setComments([...comments, other]);
+      }
+    }    
   }
   return (
     <>
@@ -63,8 +98,9 @@ const ReactComment = (props) => {
         placeholder={placeholder} 
         onCancelComment={() => { setIsDialogOpen(false) }}
         onSubmitComment={dialogDoneclicked}
-        userData={_userData}
+        userData={_userData.current}
       />
+      <CommentList comments={comments}/>
     </>
   )
 }

@@ -8,7 +8,7 @@ const App = () => {
           <ReactComment 
             configuration={
                 {
-                    apiUrl: null,//"https://comments.free.beeceptor.com",
+                    apiUrl: null, //"https://comments.free.beeceptor.com",
                     placeholder: "",
                     areCommentsExpanded: true,
                     showCount: true,
