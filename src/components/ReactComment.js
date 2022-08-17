@@ -3,15 +3,19 @@ import EditorDialog from './Editor/EditorDialog';
 import CommentList from './Comment/CommentList';
 import GoogleSignIn from './socialLogin/GoogleSignIn';
 import FacebookSignIn from './SocialLogin/FacebookSignIn';
-import { Fetcher } from '../DataProvider/Fetcher';
+import CommentStore from '../DataProvider/CommentStore';
 
 const ReactComment = (props) => {
   const [comments, setComments] = useState([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const _userData = useRef(null);
+  const _userData = useRef(null);  
   const { showCount, editorRows, placeholder, apiUrl } = props.configuration;
+  const _store = useRef(CommentStore(apiUrl));
   function fetchComments() {
-    return Fetcher.get(apiUrl);
+    return _store.current.all();
+  }
+  function addComment(payload) {
+    return _store.current.add(payload);
   }
   function CommentsCount() {
     return showCount && <div className="react-comments-count">{`${comments.length} comments`}</div>
@@ -48,31 +52,31 @@ const ReactComment = (props) => {
       setComments(items);
     }
   }, []);
-  const dialogDoneclicked = (data) => {
-    if(data) {
-      const { beforeAddComment, commentTransformer } = props;
+  const dialogDoneclicked = (comment) => {
+    if(comment) {
+      const { beforeAddComment, commentTransformer, onCommentAdded } = props;
       setIsDialogOpen(false);
-      let beforeInsertData = data;
-      if(beforeAddComment) {
-        beforeInsertData = beforeAddComment(beforeInsertData);
-      }
-      if(commentTransformer) {
-        beforeInsertData = commentTransformer(beforeInsertData);
-      }
       const current = _userData.current;
       const payload = {
-        comment: beforeInsertData,
+        comment: comment,
         name: current.name,
         picture: current.picture,
         email: current.email
       }
+      if(beforeAddComment) {
+        payload = beforeAddComment(payload);
+      }
+      if(commentTransformer) {
+        payload = commentTransformer(payload);
+      }      
       console.log(payload);
       if(apiUrl) {
-        Fetcher.post(`${apiUrl}/comment`, payload).then(
+        addComment(payload).then(
           () => {
             fetchComments().then(
               (result) => {
                 setComments(result);
+                onCommentAdded(result);
               }
             )
           }
@@ -85,6 +89,7 @@ const ReactComment = (props) => {
       } else {
         const {email, ...other} = payload;
         setComments([...comments, other]);
+        onCommentAdded(other);
       }
     }    
   }

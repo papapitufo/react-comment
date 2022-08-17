@@ -8,14 +8,15 @@ const App = () => {
           <ReactComment 
             configuration={
                 {
-                    apiUrl: null, //"https://comments.free.beeceptor.com",
+                    apiUrl: "https://62fc5c531e6a530698a54458.mockapi.io/comment",
                     placeholder: "",
                     areCommentsExpanded: true,
                     showCount: true,
                     showEditorButton: false,
                     editorRows: undefined,
                     enableRichText: false,
-                    social: []
+                    social: [],
+
                 }
             }
           />
