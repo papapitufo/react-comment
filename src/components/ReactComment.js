@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import EditorDialog from './Editor/EditorDialog';
 import CommentList from './Comment/CommentList';
-import GoogleSignIn from './socialLogin/GoogleSignIn';
+import GoogleSignIn from './SocialLogin/GoogleSignIn';
 import FacebookSignIn from './SocialLogin/FacebookSignIn';
 import CommentStore from '../DataProvider/CommentStore';
 
