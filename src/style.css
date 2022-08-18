@@ -26,3 +26,10 @@
     font-size: 0.9em;
     margin-left: 5px;
 }
+.MuiListItemText-primary {
+    font-size: 0.8rem !important;
+    text-transform: capitalize;
+}
+.css-1mcnwpj-MuiList-root {
+    max-width: none !important;
+}

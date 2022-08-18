@@ -16,7 +16,7 @@ const App = () => {
                     editorRows: undefined,
                     enableRichText: false,
                     social: [],
-
+                    allowDelete: true
                 }
             }
           />

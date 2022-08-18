@@ -9,13 +9,16 @@ const ReactComment = (props) => {
   const [comments, setComments] = useState([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const _userData = useRef(null);  
-  const { showCount, editorRows, placeholder, apiUrl } = props.configuration;
+  const { showCount, editorRows, placeholder, apiUrl, allowDelete } = props.configuration;
   const _store = useRef(CommentStore(apiUrl));
   function fetchComments() {
     return _store.current.all();
   }
   function addComment(payload) {
     return _store.current.add(payload);
+  }
+  function removeComment(id) {
+    return _store.current.remove(id);
   }
   function CommentsCount() {
     return showCount && <div className="react-comments-count">{`${comments.length} comments`}</div>
@@ -52,24 +55,32 @@ const ReactComment = (props) => {
       setComments(items);
     }
   }, []);
+  const getUserDataPayload = (comment) => {
+    const current = _userData.current;
+    let picUrl = current.picture;
+    let id = _userData.id;
+    if(current.platform == 'facebook') picUrl = current.picture.data.url;
+    if(current.platform == 'google') id = _userData.sub;
+    return {
+      userId: id,
+      comment: comment,
+      name: current.name,
+      picture: picUrl,
+      email: current.email,
+      createdAt: new Date()
+    }
+  }
   const dialogDoneclicked = (comment) => {
     if(comment) {
       const { beforeAddComment, commentTransformer, onCommentAdded } = props;
       setIsDialogOpen(false);
-      const current = _userData.current;
-      const payload = {
-        comment: comment,
-        name: current.name,
-        picture: current.picture,
-        email: current.email
-      }
+      const payload = getUserDataPayload(comment);
       if(beforeAddComment) {
         payload = beforeAddComment(payload);
       }
       if(commentTransformer) {
         payload = commentTransformer(payload);
-      }      
-      console.log(payload);
+      }     
       if(apiUrl) {
         addComment(payload).then(
           () => {
@@ -105,7 +116,7 @@ const ReactComment = (props) => {
         onSubmitComment={dialogDoneclicked}
         userData={_userData.current}
       />
-      <CommentList comments={comments}/>
+      <CommentList comments={comments} onRemoveComment={removeComment} allowDelete userId={_userData.id}/>
     </>
   )
 }

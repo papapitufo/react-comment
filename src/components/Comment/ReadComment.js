@@ -6,13 +6,14 @@ import Avatar from '@mui/material/Avatar';
 import Typography from '@mui/material/Typography';
 
 const ReadComment = (props) => {
-  const { name, picture, comment } = props.comment;
+  const { name, picture, comment, createdAt="" } = props.comment;
   return (
     <ListItem alignItems="flex-start">
       <ListItemAvatar>
         <Avatar alt={name} src={picture} />
       </ListItemAvatar>
       <ListItemText
+        primary={name}
         secondary={
           <React.Fragment>
             <Typography
@@ -21,9 +22,9 @@ const ReadComment = (props) => {
               variant="body2"
               color="text.primary"
             >
-            {name}
-            </Typography>
-            {comment}
+            {`${(new Date(createdAt)).toLocaleDateString()} - `}
+            </Typography>  
+            {comment}          
           </React.Fragment>
         }
       />
