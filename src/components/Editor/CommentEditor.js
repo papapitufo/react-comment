@@ -1,5 +1,5 @@
 import React from 'react';
-import {$getRoot, $getSelection} from 'lexical';
+import {$getRoot, $createParagraphNode, $createTextNode} from 'lexical';
 import {useEffect} from 'react';
 
 import {LexicalComposer} from '@lexical/react/LexicalComposer';
@@ -57,6 +57,16 @@ function CommentEditor(props) {
 
   function ButtonActionsPlugin() {
     const [editor] = useLexicalComposerContext();
+    const { comment } = props;
+    if(comment) {
+      editor.update(() => {
+        const root = $getRoot();
+        const paragraphNode = $createParagraphNode();
+        const textNode = $createTextNode(comment.comment);
+        paragraphNode.append(textNode);
+        root.append(paragraphNode);
+      })
+    }
     const actionClicked = (isSubmit) => {
       if(isSubmit) {
         const state = editor.getEditorState();

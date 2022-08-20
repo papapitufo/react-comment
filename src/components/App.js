@@ -1,7 +1,13 @@
 import React from 'react';
-import ReactComment from './ReactComment';
+import ReactComment from './Comment/ReactComment';
 import '../style.css';
 
+function commentAdded(comment) {
+  console.log(comment);
+}
+function commentRemoved(id) {
+  console.log(id);
+}
 const App = () => {
     return (
         <>
@@ -16,9 +22,12 @@ const App = () => {
                     editorRows: undefined,
                     enableRichText: false,
                     social: [],
-                    allowDelete: true
+                    allowDelete: true,
+                    allowEdit: true
                 }
             }
+            onCommentAdded={commentAdded}
+            onCommentRemoved={commentRemoved}
           />
         </>
     )

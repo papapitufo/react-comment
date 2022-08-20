@@ -7,7 +7,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import CommentEditor from './CommentEditor';
 
 export default function EditorDialog(props) {
-  const { open = false, onCancelComment, onSubmitComment, rows, placeholder, userData } = props;
+  const { open = false, onCancelComment, onSubmitComment, rows, placeholder, userData, comment } = props;
   const picUrl = userData?.platform == "google" ? userData?.picture : userData?.picture.data.url;
   return (
     <div>
@@ -22,6 +22,7 @@ export default function EditorDialog(props) {
           <CommentEditor 
             placeholder={placeholder} 
             rows={rows} 
+            comment={comment}
             onSubmitComment={onSubmitComment} 
             onCancelComment={onCancelComment}
           />
