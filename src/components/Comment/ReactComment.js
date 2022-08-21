@@ -56,24 +56,34 @@ const ReactComment = (props) => {
           }
         )
       }
-    ).catch((exception) => { _editComment.current = null })
+    ).catch((exception) => { 
+      console.log(exception);
+      _editComment.current = null 
+    })
   }
   function onEditComment(id) {
     _editComment.current = comments.find(comment => comment.id == id);
     if(_editComment.current) setIsDialogOpen(true);
   }
   function WriteComment() {
+    const { facebookClientId, googleClientId } = props.configuration;
     return (
       <div className="comment-social-container">
       <span>write a comment with</span>
+      {
+      googleClientId &&
       <GoogleSignIn 
-        clientId="230467277870-ssce2shtbq5v9mrhr3b0sumru0oh4vfl.apps.googleusercontent.com"
+        clientId={googleClientId}
         onSuccessLogin={successLogin}
       />
+      }
+      {
+      facebookClientId &&
       <FacebookSignIn 
-        appId="1190250085159991"
+        appId={facebookClientId}
         onSuccessLogin={successLogin}
       />
+      }
       </div>
     )
   }
@@ -109,7 +119,10 @@ const ReactComment = (props) => {
     if(comment) {
       const { beforeAddComment, commentTransformer, onCommentAdded } = props;
       setIsDialogOpen(false);
-      if(_editComment.current) onUpdateComment(comment);
+      if(_editComment.current) {
+        onUpdateComment(comment);
+        return;
+      }
       const payload = getUserDataPayload(comment);
       if(beforeAddComment) {
         payload = beforeAddComment(payload);

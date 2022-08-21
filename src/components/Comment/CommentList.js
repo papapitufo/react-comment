@@ -10,7 +10,6 @@ const CommentList = (props) => {
       {
         props.comments.sort((commentA, commentB) => new Date(commentB.createdAt) - new Date(commentA.createdAt))
         .map((_comment) => {
-          if(_comment.name.toLowerCase() == "robi moller")console.log("comment data", {_comment, userId});
           return (
             <div key={_comment.id}>
               <ReadComment
