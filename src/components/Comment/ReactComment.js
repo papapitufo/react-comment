@@ -10,7 +10,7 @@ const ReactComment = (props) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const _userData = useRef(null);  
   const _editComment = useRef(null);
-  const { showCount, editorRows, placeholder, apiUrl, allowDelete, allowEdit } = props.configuration;
+  const { showCount, editorRows, placeholder, apiUrl, allowDelete, allowEdit, commentModel } = props.configuration;
   const _store = useRef(CommentStore(apiUrl));
   function fetchComments() {
     return _store.current.all();
@@ -173,7 +173,8 @@ const ReactComment = (props) => {
         onEditComment={onEditComment} 
         allowDelete 
         allowEdit
-        userId={userId}        
+        userId={userId}   
+        commentModel={commentModel}     
       />
     </>
   )

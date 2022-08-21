@@ -1,2 +1,3 @@
 import ReactComment from "./components/Comment/ReactComment";
-export { ReactComment }
+import Model from "./components/Comment/Model";
+export { ReactComment, Model }
