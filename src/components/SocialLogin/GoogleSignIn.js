@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import GoogleIcon from '@mui/icons-material/Google';
+import "./style.css";
 
 let _userData = null;
 const GoogleSignIn = (props) => {
