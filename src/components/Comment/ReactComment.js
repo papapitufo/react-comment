@@ -10,11 +10,11 @@ const ReactComment = (props) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const _userData = useRef(null);  
   const _editComment = useRef(null);
-  const { showCount, editorRows, placeholder, apiUrl, allowDelete, allowEdit, commentModel } = props.configuration || {};
-  const _store = useRef(CommentStore(apiUrl));
+  const { showCount, editorRows, placeholder, apiUrl, allowDelete, allowEdit, commentModel, commentStore } = props.configuration || {};
+  const _store = useRef(commentStore() || CommentStore(apiUrl, props));
   async function fetchComments() {
     const result = await _store.current.all();
-    const processed = props.onCommentsFetched?.(result);
+    const processed = props.onCommentsFetched?.(result) || result;
     return Promise.resolve(processed);
   }
   function addComment(payload) {

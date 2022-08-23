@@ -2,6 +2,12 @@ import React from 'react';
 import ReactComment from './Comment/ReactComment';
 import '../style.css';
 
+function beforeCommentAdded(payload) {
+  return payload;
+}
+function beforeCommentUpdated(payload) {
+  return payload;
+}
 function commentAdded(comment) {
   console.log(comment);
 }
@@ -31,6 +37,8 @@ const App = () => {
             commentModel: null //extends Model and overrides paint().
           }
         }
+        onBeforeAdd={beforeCommentAdded}
+        onBeforeEdit={beforeCommentUpdated}
         onCommentAdded={commentAdded}
         onCommentRemoved={commentRemoved}
         onCommentUpdated={commentUpdated}
