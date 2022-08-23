@@ -40,7 +40,7 @@ const GoogleSignIn = (props) => {
     const data = JSON.parse(window.atob(payload));
     data["platform"] = "google";
     _userData = data;
-    onSuccessLogin?.(_userData);
+    onSuccessLogin?.(_userData); //we want to return data a little massaged here
   }
   const dynamicButtonRender = () => {
     if(_userData) {
