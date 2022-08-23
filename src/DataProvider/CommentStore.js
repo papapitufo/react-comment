@@ -9,14 +9,14 @@ const CommentStore = (api, context) => {
             return Fetcher.get(api);            
         },
         add: (payload) => {
-            const payload = context.onBeforeAdd?.(payload) || payload;
+            payload = context.onBeforeAdd?.(payload) || payload;
             return Fetcher.post(api, payload);
         },
         remove: (id) => {
             return Fetcher.delete(`${api}/${id}`);
         },
         edit: (id, payload) => {
-            const payload = context.onBeforeEdit?.(payload) || payload;
+            payload = context.onBeforeEdit?.(payload) || payload;
             return Fetcher.patch(`${api}/${id}`, payload);
         } 
     }
