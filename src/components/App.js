@@ -28,8 +28,8 @@ const App = () => {
           }
         }
         onCommentAdded={commentAdded}
-        onCommentRemoved={commentRemoved}
         onCommentUpdated={commentUpdated}
+        onCommentRemoved={commentRemoved}        
       />
     </>
   )

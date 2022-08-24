@@ -67,10 +67,10 @@ const ReactComment = (props) => {
     if (_editComment.current) setIsDialogOpen(true);
   }
   function WriteComment() {
-    const { facebookClientId, googleClientId } = props.configuration;
+    const { facebookClientId, googleClientId, writeCommentPrompt } = props.configuration;
     return (
       <div className="comment-social-container">
-        <span>write a comment with</span>
+        <span>{writeCommentPrompt}</span>
         {
           googleClientId &&
           <GoogleSignIn
