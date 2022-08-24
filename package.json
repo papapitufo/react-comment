@@ -1,6 +1,6 @@
 {
   "name": "react-comments-module",
-  "version": "0.0.11",
+  "version": "0.0.13",
   "description": "Lean react comments module",
   "keywords": ["comments", "comment", "react comments", "react comments module"],
   "browser": "/dist/lib.js",

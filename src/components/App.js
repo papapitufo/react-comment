@@ -24,7 +24,8 @@ const App = () => {
             googleClientId: "230467277870-ssce2shtbq5v9mrhr3b0sumru0oh4vfl.apps.googleusercontent.com",
             allowDelete: true,
             allowEdit: true,
-            commentModel: null //extends Model and overrides paint().
+            commentModel: null, //extends Model and overrides paint().
+            writeCommentPrompt:""
           }
         }
         onCommentAdded={commentAdded}

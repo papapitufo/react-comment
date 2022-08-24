@@ -47,6 +47,7 @@ const ReactComment = (props) => {
     }
   }
   function onUpdateComment(text) {
+    const { onCommentUpdated } = props;
     updateComment(_editComment.current.id, { comment: text }).then(
       () => {
         _editComment.current = null;
