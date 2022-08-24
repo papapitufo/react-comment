@@ -12,7 +12,7 @@ const ReactComment = (props) => {
   const _editComment = useRef(null);
   const { showCount, editorRows, placeholder, apiUrl, allowDelete, allowEdit, commentModel, commentStore } = props.configuration || {};
   const _store = useRef(commentStore?.() || CommentStore(apiUrl));
-  async function fetchComments() {
+  function fetchComments() {
     return _store.current.all();
   }
   function addComment(payload) {

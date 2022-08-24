@@ -2,7 +2,7 @@ const path = require('path');
 const express = require('express');
 const app = express();
 const publicPath = path.join(__dirname, '', 'public');
-const bundlePath = path.join(__dirname, '', 'dist');
+const bundlePath = path.join(__dirname, '', 'out');
 const port = process.env.PORT || 3000;
 app.use(express.static(bundlePath));
 app.get('/', (req, res) => {
