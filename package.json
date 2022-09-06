@@ -8,7 +8,7 @@
   "scripts": {
     "dev": "webpack serve",
     "start": "node server.js",
-    "build": "babel src --out-dir dist --copy-files && rm dist/index.js dist/components/App.js",
+    "build": "webpack && babel src --out-dir dist --copy-files && rm dist/index.js dist/components/App.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "robimoller.com",

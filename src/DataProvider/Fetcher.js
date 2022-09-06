@@ -6,44 +6,49 @@ export const Fetcher = {
   delete: _delete
 };
 
-function get(url) {
+function get(url, options) {
   const requestOptions = {
-    method: 'GET'
+    method: 'GET',
+    ...options
   };
   return fetch(url, requestOptions).then(handleResponse);
 }
 
-function post(url, body) {
+function post(url, body, options) {
   const requestOptions = {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(body)
+    body: JSON.stringify(body),
+    ...options
   };
   return fetch(url, requestOptions).then(handleResponse);
 }
 
-function put(url, body) {
+function put(url, body, options) {
   const requestOptions = {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(body)
+    body: JSON.stringify(body),
+    ...options
   };
   return fetch(url, requestOptions).then(handleResponse);
 }
 
-function patch(url, body) {
+function patch(url, body, options) {
   const requestOptions = {
     method: 'PATCH',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(body)
+    body: JSON.stringify(body),
+    ...options
   };
   return fetch(url, requestOptions).then(handleResponse);
 }
 
 // prefixed with underscored because delete is a reserved word in javascript
-function _delete(url) {
+function _delete(url, options) {
   const requestOptions = {
-    method: 'DELETE'
+    method: 'DELETE',
+    ...options
   };
   return fetch(url, requestOptions).then(handleResponse);
 }
