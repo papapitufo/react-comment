@@ -1,13 +1,13 @@
 {
   "name": "react-comments-module",
-  "version": "0.0.13",
+  "version": "0.0.15",
   "description": "Lean react comments module",
   "keywords": ["comments", "comment", "react comments", "react comments module"],
   "browser": "/dist/lib.js",
   "files": ["dist/*"],
   "scripts": {
     "dev": "webpack serve",
-    "start": "node server.js",
+    "start": "npm run build && node server.js",
     "build": "webpack && babel src --out-dir dist --copy-files && rm dist/index.js dist/components/App.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
