@@ -7,7 +7,7 @@
   "files": ["dist/*"],
   "scripts": {
     "dev": "webpack serve",
-    "start": "npm run build && node server.js",
+    "start": "npm install webpack && webpack && node server.js",
     "build": "webpack && babel src --out-dir dist --copy-files && rm dist/index.js dist/components/App.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
