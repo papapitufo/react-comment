@@ -14,7 +14,7 @@
   ],
   "scripts": {
     "dev": "webpack serve",
-    "start": "npm install && ls -ll && node node_modules/webpack/bin/webpack.js && node server.js",
+    "start": "npm install && ls node_modules/ -ll && cd && node node_modules/webpack/bin/webpack.js && node server.js",
     "build": "webpack && babel src --out-dir dist --copy-files && rm dist/index.js dist/components/App.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
