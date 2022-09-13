@@ -2,9 +2,16 @@
   "name": "react-comments-module",
   "version": "0.0.15",
   "description": "Lean react comments module",
-  "keywords": ["comments", "comment", "react comments", "react comments module"],
+  "keywords": [
+    "comments",
+    "comment",
+    "react comments",
+    "react comments module"
+  ],
   "browser": "/dist/lib.js",
-  "files": ["dist/*"],
+  "files": [
+    "dist/*"
+  ],
   "scripts": {
     "dev": "webpack serve",
     "start": "npm install && webpack && node server.js",
