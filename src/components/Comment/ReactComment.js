@@ -128,7 +128,7 @@ const ReactComment = (props) => {
       }
       addComment(payload).then(
         () => {
-          onCommentAdded?.(result);
+          onCommentAdded?.(payload);
           fetchComments().then(
             (result) => {
               setComments(result);              
