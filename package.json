@@ -14,7 +14,7 @@
   ],
   "scripts": {
     "dev": "webpack serve",
-    "start": "npm install webpack && ls node_modules/ -ll && node node_modules/webpack/bin/webpack.js && node server.js",
+    "start": "node server.js",
     "build": "webpack && babel src --out-dir dist --copy-files && rm dist/index.js dist/components/App.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -45,7 +45,6 @@
     "express": "^4.18.1",
     "lexical": "^0.3.8",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "webpack": "^5.73.0"
+    "react-dom": "^18.2.0"
   }
 }
