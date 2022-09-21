@@ -18,14 +18,15 @@ const App = () => {
           {
             apiUrl: "https://62fc5c531e6a530698a54458.mockapi.io/comment",
             placeholder: "",
-            showCount: false,
+            showCount: true,
             editorRows: undefined,
             facebookClientId: "1190250085159991",
             googleClientId: "230467277870-ssce2shtbq5v9mrhr3b0sumru0oh4vfl.apps.googleusercontent.com",
             allowDelete: true,
             allowEdit: true,
-            commentModel: null, //extends Model and overrides paint().
-            writeCommentPrompt:""
+            allowReply: true,
+            commentModel: null, //extends Model and overrides painter() if needed.
+            writeCommentPrompt:"Choose an identity to write a comment: "
           }
         }
         onCommentAdded={commentAdded}

@@ -5,7 +5,8 @@ class Model {
     picture: null,
     comment: null,
     userId: null,
-    createdAt: null
+    createdAt: null,
+    parentId: null
   }
   constructor(attributes) {
     this.attributes = {...this.attributes, ...attributes};
@@ -13,6 +14,9 @@ class Model {
   get(attribute) {
     if(attribute) return this.attributes[attribute];
   }
-  paint(props) {}
+  amIaReply() {
+    return !!this.attributes.parentId;
+  }
+  painter(props) {}
 }
 export default Model;

@@ -15,10 +15,14 @@ class CommentModel extends Model {
     super(attrs);
   }
 
-  paint(props) {
+  painter(props) {
     const { name, picture, id, comment, createdAt, userId } = this.attributes;
+    const indent = this.amIaReply() ? 4 : 0;
+    const replyColor = this.amIaReply() ? "aliceblue" : "white"; 
     return (
       <ListItem
+        style={{backgroundColor: replyColor}}
+        sx={{ pl: indent }}
         alignItems="flex-start"
         secondaryAction={
           <>

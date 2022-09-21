@@ -9,7 +9,7 @@ import "./CommentEditorStyle.css";
 
 export default function EditorDialog(props) {
   const { open = false, onCancelComment, onSubmitComment, rows, placeholder, userData, comment } = props;
-  const picUrl = userData?.platform == "google" ? userData?.picture : userData?.picture.data.url;
+  const picUrl = userData?.picture;
   return (
     <div>
       <Dialog open={open} fullWidth={true} maxWidth="sm">

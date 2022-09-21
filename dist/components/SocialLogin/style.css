@@ -1,0 +1,16 @@
+/* Global styles */
+.comment-social-icon {
+    cursor: pointer;
+    padding: 1.7px;
+    border: 1px solid lightblue;
+    border-radius: 4px;
+    color: darkblue;
+}
+.comment-social-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+.comment-social-container span {
+    margin: 2px;
+}
