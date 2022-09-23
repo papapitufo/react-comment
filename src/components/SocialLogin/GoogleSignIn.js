@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import GoogleIcon from '@mui/icons-material/Google';
+import "./style.css";
 
 let _userData = null;
 const GoogleSignIn = (props) => {
@@ -39,7 +40,7 @@ const GoogleSignIn = (props) => {
     const data = JSON.parse(window.atob(payload));
     data["platform"] = "google";
     _userData = data;
-    onSuccessLogin?.(_userData);
+    onSuccessLogin?.(_userData); //we want to return data a little massaged here
   }
   const dynamicButtonRender = () => {
     if(_userData) {

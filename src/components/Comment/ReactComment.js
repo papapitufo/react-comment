@@ -1,17 +1,23 @@
 import React, { useEffect, useRef, useState } from 'react';
 import EditorDialog from '../Editor/EditorDialog';
 import CommentList from './CommentList';
+import Button from '@mui/material/Button';
+import AddCommentIcon from '@mui/icons-material/AddComment';
 import GoogleSignIn from '../SocialLogin/GoogleSignIn';
 import FacebookSignIn from '../SocialLogin/FacebookSignIn';
 import CommentStore from '../../DataProvider/CommentStore';
 
 const ReactComment = (props) => {
-  const [comments, setComments] = useState([]);
+  const [comments, setComments] = useState((() => {
+    if(!props.apiUrl && props.comments) return comments;
+    return []
+  })());
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const _userData = useRef(null);  
+  const [identity, setIdentity] = useState(null);
   const _editComment = useRef(null);
-  const { showCount, editorRows, placeholder, apiUrl, allowDelete, allowEdit } = props.configuration;
-  const _store = useRef(CommentStore(apiUrl));
+  const _replyParentId = useRef(null);
+  const { showCount, editorRows, placeholder, apiUrl, allowDelete, allowEdit, allowReply, commentModel, commentStore } = props.configuration || {};
+  const _store = useRef(commentStore?.() || CommentStore(apiUrl));
   function fetchComments() {
     return _store.current.all();
   }
@@ -27,28 +33,26 @@ const ReactComment = (props) => {
   function CommentsCount() {
     return showCount && <div className="react-comments-count">{`${comments.length} comments`}</div>
   }
-  function successLogin(userData) {
-    _userData.current = userData;
-    setIsDialogOpen(true);
-  }
   function onRemoveComment(id) {
-    if(confirm("Confirm delete comment") == true) {
+    if (confirm("Confirm delete comment") == true) {
       const { onCommentRemoved } = props;
       removeComment(id).then(
         () => {
+          onCommentRemoved?.(id);
           fetchComments().then(
             (result) => {
-              setComments(result);
-              onCommentRemoved?.(id);
+              setComments(result);              
             }
           )
         }
       )
     }
   }
-  function onUpdateComment(text) {
+  function setCommentForUpdate(text) {
+    const { onCommentUpdated } = props;
     updateComment(_editComment.current.id, { comment: text }).then(
-      () => {
+      () => {        
+        onCommentUpdated?.({_editComment, text});
         _editComment.current = null;
         fetchComments().then(
           (result) => {
@@ -56,124 +60,157 @@ const ReactComment = (props) => {
           }
         )
       }
-    ).catch((exception) => { 
+    ).catch((exception) => {
       console.log(exception);
-      _editComment.current = null 
+      _editComment.current = null
     })
+  }
+  function setCommentForReply(comment) {
+    const payload = getUserDataPayload(comment);
+    addComment(payload).then(
+      () => {
+        _replyParentId.current = null;
+        fetchComments().then(
+          (result) => {
+            setComments(result);
+          }
+        )
+      }
+    ).catch(
+      (exception) => {
+        _replyParentId.current = null;
+        console.error(exception);
+      }
+    )
   }
   function onEditComment(id) {
     _editComment.current = comments.find(comment => comment.id == id);
-    if(_editComment.current) setIsDialogOpen(true);
+    if (_editComment.current) setIsDialogOpen(true);
   }
-  function WriteComment() {
-    const { facebookClientId, googleClientId } = props.configuration;
+  function IdentityProvider(props) {
+    if(identity) return;
+    const { facebookClientId, googleClientId, writeCommentPrompt } = props.configuration;
     return (
       <div className="comment-social-container">
-      <span>write a comment with</span>
-      {
-      googleClientId &&
-      <GoogleSignIn 
-        clientId={googleClientId}
-        onSuccessLogin={successLogin}
-      />
-      }
-      {
-      facebookClientId &&
-      <FacebookSignIn 
-        appId={facebookClientId}
-        onSuccessLogin={successLogin}
-      />
-      }
+        <span>{writeCommentPrompt}</span>
+        {
+          googleClientId &&
+          <GoogleSignIn
+            clientId={googleClientId}
+            onSuccessLogin={(data) => {
+              props.onIdentityObtained({ id: data.sub, ...data})
+            }}
+          />
+        }
+        {
+          facebookClientId &&
+          <FacebookSignIn
+            appId={facebookClientId}
+            onSuccessLogin={(data) => {
+              props.onIdentityObtained({ picture: data.picture.data.url, ...data})
+            }}
+          />
+        }
       </div>
     )
   }
-  useEffect(() => {
-    const { configuration, items = [] } = props;
-    const api = configuration?.apiUrl;
-    if (api) {
-      fetchComments().then(
-        (result) => {
-          setComments(result);
-        }
+  function WriteAComment() {
+    if(identity) {
+      return (
+        <Button 
+         variant="contained" 
+         startIcon={<AddCommentIcon />} 
+         size="small"
+         onClick={setIsDialogOpen.bind(null, true)}>
+          comment
+        </Button>
       )
-    } else {
-      setComments(items);
     }
+  }
+  useEffect(() => {
+    fetchComments().then(
+      (result) => {
+        setComments(result);
+      }
+    )
   }, []);
   const getUserDataPayload = (comment) => {
-    const current = _userData.current;
-    let picUrl = current?.picture;
-    let id = current?.id;
-    if(current.platform == 'facebook') picUrl = current?.picture.data.url;
-    if(current.platform == 'google') id = current?.sub;
+    let picUrl = identity?.picture;
+    let id = identity?.id;
     return {
       userId: id,
       comment: comment,
-      name: current.name,
+      name: identity.name,
       picture: picUrl,
-      email: current.email,
-      createdAt: new Date()
+      email: identity.email,
+      createdAt: new Date(),
+      parentId: _replyParentId.current
     }
   }
   const dialogDoneclicked = (comment) => {
-    if(comment) {
-      const { beforeAddComment, commentTransformer, onCommentAdded } = props;
+    if (comment) {
+      const { onCommentAdded } = props;
       setIsDialogOpen(false);
-      if(_editComment.current) {
-        onUpdateComment(comment);
+      //_editComments indicates that the dialog was closed with the intention of 
+      //editing an exisitng post
+      if (_editComment.current) {
+        setCommentForUpdate(comment);
+        return;
+      }
+      if (_replyParentId.current) {
+        setCommentForReply(comment);
         return;
       }
       const payload = getUserDataPayload(comment);
-      if(beforeAddComment) {
-        payload = beforeAddComment(payload);
-      }
-      if(commentTransformer) {
-        payload = commentTransformer(payload);
-      }     
-      if(apiUrl) {
-        addComment(payload).then(
-          () => {
-            fetchComments().then(
-              (result) => {
-                setComments(result);
-                onCommentAdded?.(result);
-              }
-            )
-          }
-        ).catch(
-          (exception) => {
-            console.error(exception);
-          }
-        )
-        
-      } else {
-        const {email, ...other} = payload;
-        setComments([...comments, other]);
-        onCommentAdded(other);
-      }
-    }    
+      addComment(payload).then(
+        () => {
+          onCommentAdded?.(payload);
+          fetchComments().then(
+            (result) => {
+              setComments(result);              
+            }
+          )
+        }
+      ).catch(
+        (exception) => {
+          console.error(exception);
+        }
+      )
+    }
   }
-  const userId = _userData.current?.platform == "google" ? _userData.current.sub : _userData.current?.id;
+  const replyCommentClicked = (parentId) => {
+    _replyParentId.current = parentId;
+    setIsDialogOpen(true);
+  }
+  const clearDialogTransitoryDataAndClose = () => {
+    _editComment.current = null; 
+    _replyParentId.current = null;
+    setIsDialogOpen(false);
+  }
   return (
     <>
       <CommentsCount />
-      <WriteComment />
-      <EditorDialog 
-        open={isDialogOpen} 
-        rows={editorRows} 
-        placeholder={placeholder} 
-        onCancelComment={() => { _editComment.current = null; setIsDialogOpen(false) }}
+      <IdentityProvider onIdentityObtained={setIdentity} configuration={props.configuration}/>
+      <WriteAComment />
+      <EditorDialog
+        open={isDialogOpen}
+        rows={editorRows}
+        placeholder={placeholder}
+        onCancelComment={clearDialogTransitoryDataAndClose}
         onSubmitComment={dialogDoneclicked}
-        userData={_userData.current}
+        userData={identity}
         comment={_editComment.current}
       />
-      <CommentList 
-        comments={comments} 
-        onRemoveComment={onRemoveComment} 
-        onEditComment={onEditComment} 
-        allowDelete 
-        allowEdit
-        userId={userId}        
+      <CommentList
+        comments={comments}
+        onRemoveComment={onRemoveComment}
+        onEditComment={onEditComment}
+        allowDelete={allowDelete}
+        allowEdit={allowEdit}
+        allowReply={allowReply}
+        onReplyCommentClicked={replyCommentClicked}
+        userId={identity?.id}
+        commentModel={commentModel}
       />
     </>
   )

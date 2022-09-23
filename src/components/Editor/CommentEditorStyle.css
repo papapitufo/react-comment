@@ -7,3 +7,22 @@
 .comment-editor-submit-button {
     cursor: pointer;
 }
+.editor-dialog-title {
+    display: flex;
+}
+.editor-dialog-title img {
+    width: 30px;
+    border-radius: 20px;
+}
+.editor-dialog-title span {
+    text-transform: capitalize;
+    font-size: 0.9em;
+    margin-left: 5px;
+}
+.MuiListItemText-primary {
+    font-size: 0.8rem !important;
+    text-transform: capitalize;
+}
+.css-1mcnwpj-MuiList-root {
+    max-width: none !important;
+}

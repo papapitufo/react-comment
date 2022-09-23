@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import FacebookOutlinedIcon from '@mui/icons-material/FacebookOutlined';
-const style = {}
+import "./style.css";
 
 const createLoadFBScript = () => {
   return new Promise((resolve, reject) => {
@@ -77,6 +77,6 @@ const FacebookSignIn = (props) => {
     }
     FB.login(handleFacebookLogin, {scope: 'public_profile,email'});
   }
-  return (<span className={`comment-social-icon ${customClass}`}><FacebookOutlinedIcon style={style.button} onClick={onFacebookLoginClick}/></span>)
+  return (<span className={`comment-social-icon ${customClass}`}><FacebookOutlinedIcon onClick={onFacebookLoginClick}/></span>)
 }
 export default FacebookSignIn;
