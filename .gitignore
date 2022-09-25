@@ -10,6 +10,9 @@
 
 # production
 /build
+/dist
+/out
+notes.txt
 
 # misc
 .DS_Store

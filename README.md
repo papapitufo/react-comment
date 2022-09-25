@@ -130,4 +130,12 @@ function IdentityResolver(props) {
 />
 
 ```
+### TODO
+We are using Facebooks [lexical editor](https://github.com/facebook/lexical) which is still in Beta.
+This package itself will remain in Beta (or early dev) until issues list marked as 'feature' are all resolved. 
 
+Issues list includes:
+* Add anonymous Signin
+* Allow customize Social Login buttons 
+* Multiple levels of reply threading (forum style)
+* and more ...
