@@ -1,5 +1,5 @@
 # react-comments-module
-A simple **Comments** implementation for embedding into other apps. This code is provided as plug and play to allow you to inject a **Comments section** in your app.
+A simple **Comments** implementation for articles, blogs, forums. This code is provided as plug and play to allow you to inject a **Comments section** in your app.
 
 - Facebook and Google login
 - Reply to comments
@@ -42,3 +42,92 @@ import { ReactComment } from 'react-comments-module';
 * `GET /articles/12345/comments` will get you all comments
 * `POST /articles/12345/comments` will add a new comment
 * `DELETE /articles/12345/comments/23` will remove comment with id 23
+
+### If apiUrl doesn't do it for you
+Pass a **CommentStore** to ReactComment.configuration
+
+```
+function CommentStore() {
+    return {
+        all:    () => {},
+        add:    (payload) => {},
+        remove: (id) => {},
+        edit:   (id, payload) => {}
+    }
+}
+
+<ReactComment
+  configuration={
+    {
+      commentStore: commentStore
+    }
+  }
+/>
+
+```
+### Rendering
+We use Material UI (mui) to help us out with our post rendering (see demo), but if you hate google you can extend **Model** and override **painter()**
+to use your own magic.
+
+```
+import { Model } from 'react-comments-module';
+class MagicModel extends Model {
+  painter(props) {
+    const { name, picture, id, comment, createdAt, userId } = this.attributes;
+    return (
+      <div>
+        {comment}
+      </div>
+    )
+  }
+}
+
+<ReactComment
+  configuration={
+    {
+      CommentModel: MagicModel
+    }
+  }
+/>
+```
+> See the Model to find out what attributes we expect to see when CRUDing. You can modify, map, or override the Model as your backend requires
+
+### Events
+We include some postEvents for those actions that are directly related to comments updates
+
+```
+<ReactComment
+  onCommentAdded={commentAdded}
+  onCommentUpdated={commentUpdated}
+  onCommentRemoved={commentRemoved} 
+/>
+```
+### Identity
+We include an identity provider that presents itself as a convenient action to get Facebook and Googles userName and picture.
+We want to include an anonymous provider for those cases when a formal identity is not needed. (later)
+In case the IdentityProvider doesn't work for you, we give you access to our Facebook and Google signin components for you to create your own experience
+
+```
+import { FacebookSignIn, GoogleSignIn } from 'react-comments-module';
+function IdentityResolver(props) {
+  //onIdentityObtained will seed the current context with the identity passed
+  return (
+    <FacebookSignIn
+      appId={facebookClientId}
+      onSuccessLogin={(data) => {
+        props.onIdentityObtained({ picture: data.picture.data.url, ...data})
+    }}
+  />
+  )
+}
+
+<ReactComment
+  configuration={
+    {
+      IdentityProvider: IdentityResolver
+    }
+  }
+/>
+
+```
+
