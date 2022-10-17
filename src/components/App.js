@@ -21,7 +21,10 @@ const App = () => {
             showCount: true,
             editorRows: undefined,
             facebookClientId: "1190250085159991",
-            googleClientId: "230467277870-ssce2shtbq5v9mrhr3b0sumru0oh4vfl.apps.googleusercontent.com",
+            googleSignInConfig: {
+              googleClientId: "230467277870-ssce2shtbq5v9mrhr3b0sumru0oh4vfl.apps.googleusercontent.com",
+              authorizationRequest: null
+            },
             allowDelete: true,
             allowEdit: true,
             allowReply: true,

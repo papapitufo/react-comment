@@ -1,6 +1,6 @@
 {
   "name": "react-comments-module",
-  "version": "0.0.17",
+  "version": "0.0.18",
   "description": "Lean react comments module",
   "keywords": [
     "comments",
@@ -15,11 +15,11 @@
   "scripts": {
     "dev": "webpack serve",
     "start": "node server.js",
-    "build": "webpack && babel src --out-dir dist --copy-files && rm dist/index.js dist/components/App.js",
+    "build": "rm -rf dist && webpack && babel src --out-dir dist --copy-files && rm dist/index.js dist/components/App.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "robimoller.com",
-  "license": "MIT", 
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/papapitufo/react-comment"
@@ -45,6 +45,7 @@
     "express": "^4.18.1",
     "lexical": "^0.3.8",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "social-login-react": "0.0.2"
   }
 }
