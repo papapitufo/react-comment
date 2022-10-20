@@ -20,13 +20,17 @@ const App = () => {
             placeholder: "",
             showCount: true,
             editorRows: undefined,
-            facebookClientId: "<key>",
-            googleClientId: "<key>",
+            facebookClientId: "",
+            googleSignInConfig: {
+              googleClientId: "",
+              authorizationRequest: null
+            },
             allowDelete: true,
             allowEdit: true,
             allowReply: true,
             commentModel: null, //extends Model and overrides painter() if needed.
-            writeCommentPrompt:"Choose an identity to write a comment: "
+            writeCommentPrompt:"Choose an identity to write a comment: ",
+            IdentityProvider: null
           }
         }
         onCommentAdded={commentAdded}

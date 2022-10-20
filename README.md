@@ -105,7 +105,7 @@ We include some postEvents for those actions that are directly related to commen
 ### Identity
 We include an identity provider that presents itself as a convenient action to get Facebook and Googles userName and picture.
 We want to include an anonymous provider for those cases when a formal identity is not needed. (later)
-In case the IdentityProvider doesn't work for you, we give you access to our Facebook and Google signin components for you to create your own experience
+In case the IdentityProvider doesn't work for you, import the login button flows from 'social-login-react' and create your own identityProvider
 
 ```
 import { FacebookSignIn, GoogleSignIn } from 'react-comments-module';

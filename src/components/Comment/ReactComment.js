@@ -3,9 +3,9 @@ import EditorDialog from '../Editor/EditorDialog';
 import CommentList from './CommentList';
 import Button from '@mui/material/Button';
 import AddCommentIcon from '@mui/icons-material/AddComment';
-import GoogleSignIn from '../SocialLogin/GoogleSignIn';
-import FacebookSignIn from '../SocialLogin/FacebookSignIn';
+import { FacebookSignIn, GoogleSignIn } from 'social-login-react';
 import CommentStore from '../../DataProvider/CommentStore';
+import 'social-login-react/dist/styles.css';
 
 const ReactComment = (props) => {
   const [comments, setComments] = useState((() => {
@@ -89,7 +89,8 @@ const ReactComment = (props) => {
   }
   function IdentityProvider(props) {
     if(identity) return;
-    const { facebookClientId, googleClientId, writeCommentPrompt } = props.configuration;
+    const { facebookClientId, googleSignInConfig, writeCommentPrompt } = props.configuration;
+    const { googleClientId, authorizationRequest } = googleSignInConfig;
     return (
       <div className="comment-social-container">
         <span>{writeCommentPrompt}</span>
@@ -100,12 +101,13 @@ const ReactComment = (props) => {
             onSuccessLogin={(data) => {
               props.onIdentityObtained({ id: data.sub, ...data})
             }}
+            authorizationRequest={authorizationRequest}
           />
         }
         {
           facebookClientId &&
           <FacebookSignIn
-            appId={facebookClientId}
+            clientId={facebookClientId}
             onSuccessLogin={(data) => {
               props.onIdentityObtained({ picture: data.picture.data.url, ...data})
             }}
@@ -187,10 +189,15 @@ const ReactComment = (props) => {
     _replyParentId.current = null;
     setIsDialogOpen(false);
   }
+
   return (
     <>
       <CommentsCount />
-      <IdentityProvider onIdentityObtained={setIdentity} configuration={props.configuration}/>
+      {
+        props.configuration.IdentityProvider 
+        ? <props.configuration.IdentityProvider onIdentityObtained={setIdentity} />
+        : <IdentityProvider onIdentityObtained={setIdentity} configuration={props.configuration}/>
+      }      
       <WriteAComment />
       <EditorDialog
         open={isDialogOpen}
