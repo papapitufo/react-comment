@@ -189,10 +189,15 @@ const ReactComment = (props) => {
     _replyParentId.current = null;
     setIsDialogOpen(false);
   }
+
   return (
     <>
       <CommentsCount />
-      <IdentityProvider onIdentityObtained={setIdentity} configuration={props.configuration}/>
+      {
+        props.configuration.IdentityProvider 
+        ? <props.configuration.IdentityProvider onIdentityObtained={setIdentity} />
+        : <IdentityProvider onIdentityObtained={setIdentity} configuration={props.configuration}/>
+      }      
       <WriteAComment />
       <EditorDialog
         open={isDialogOpen}
