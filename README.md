@@ -59,7 +59,7 @@ function CommentStore() {
 <ReactComment
   configuration={
     {
-      commentStore: commentStore
+      commentStore: CommentStore
     }
   }
 />
@@ -108,7 +108,7 @@ We want to include an anonymous provider for those cases when a formal identity 
 In case the IdentityProvider doesn't work for you, import the login button flows from 'social-login-react' and create your own identityProvider
 
 ```
-import { FacebookSignIn, GoogleSignIn } from 'react-comments-module';
+import { FacebookSignIn, GoogleSignIn } from 'social-login-react';
 function IdentityResolver(props) {
   //onIdentityObtained will seed the current context with the identity passed
   return (
