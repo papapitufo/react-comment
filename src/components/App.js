@@ -20,9 +20,9 @@ const App = () => {
             placeholder: "",
             showCount: true,
             editorRows: undefined,
-            facebookClientId: "1190250085159991",
+            facebookClientId: "<>",
             googleSignInConfig: {
-              googleClientId: "230467277870-ssce2shtbq5v9mrhr3b0sumru0oh4vfl.apps.googleusercontent.com",
+              googleClientId: "<>",
               authorizationRequest: null
             },
             allowDelete: true,
