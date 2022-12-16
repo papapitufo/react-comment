@@ -1,7 +1,7 @@
 # react-comments-module
 A simple **Comments** implementation for articles, blogs, forums. This code is provided as plug and play to allow you to inject a **Comments section** in your app.
 
-- Facebook and Google login
+- Facebook and Google login (more to come)
 - Reply to comments
 - Light on dependencies
 - Comments managed by consummer or provide an endpoint for the app to CRUD comments
