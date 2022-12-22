@@ -7,7 +7,7 @@ A simple **Comments** implementation for articles, blogs, forums. This code is p
 - Comments managed by consummer or provide an endpoint for the app to CRUD comments
 - Plug and play
 
-**Demo:** [react comments module](https://react-comment.herokuapp.com/)
+**Demo:** [react comments module](https://www.robimoller.com/react-comment-demo)
 
 ### Run it locally to see what it can do
 `npm install && npm run dev`
